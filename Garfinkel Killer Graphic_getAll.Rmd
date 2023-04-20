@@ -1,0 +1,462 @@
+```{r}
+install.packages('scales')
+library(scales)
+```
+
+```{r}
+data=read.csv("Combined Data For Graphing.csv")
+high=read.csv("High Performance.csv")
+normal=read.csv("Normal Performance.csv")
+low=read.csv("Low Performance.csv")
+```
+
+```{r}
+product=data$Product
+
+highruns=data[data$CONTROL.TYPE=="HIGH",]$Product
+normalruns=data[data$CONTROL.TYPE=="NORMAL",]$Product
+lowruns=data[data$CONTROL.TYPE=="LOW",]$Product
+
+time.highruns=data[data$CONTROL.TYPE=="HIGH",]$Timevalue
+time.normalruns=data[data$CONTROL.TYPE=="NORMAL",]$Timevalue
+time.lowruns=data[data$CONTROL.TYPE=="LOW",]$Timevalue
+
+time=data$Raw.TimeValue
+roundtime=b=c(seq(from=0, to=720, by=3))
+type=data$CONTROL.TYPE
+#type=data$TYPE.ALL
+
+product.ucl.high=high$Product.UCL
+product.uwl.high=high$Product.UWL
+product.cl.high=high$Product.CL
+product.lwl.high=high$Product.LWL
+product.lcl.high=high$Product.LCL
+
+product.ucl.normal=normal$Product.UCL
+product.uwl.normal=normal$Product.UWL
+product.cl.normal=normal$Product.CL
+product.lwl.normal=normal$Product.LWL
+product.lcl.normal=normal$Product.LCL
+
+product.ucl.low=low$Product.UCL
+product.uwl.low=low$Product.UWL
+product.cl.low=low$Product.CL
+product.lwl.low=low$Product.LWL
+product.lcl.low=low$Product.LCL
+
+product.ucl.high.check=data$Product.UCL..High.Performance.
+product.uwl.high.check=data$Product.UWL..High.Performance.
+product.cl.high.check=data$Product.CL..High.Performance.
+product.lwl.high.check=data$Product.LWL..High.Performance.
+product.lcl.high.check=data$Product.LCL..High.Performance.
+
+product.ucl.normal.check=data$Product.UCL..Normal.Performance.
+product.uwl.normal.check=data$Product.UWL..Normal.Performance.
+product.cl.normal.check=data$Product.CL..Normal.Performance.
+product.lwl.normal.check=data$Product.LWL..Normal.Performance.
+product.lcl.normal.check=data$Product.LCL..Normal.Performance.
+
+product.ucl.low.check=data$Product.UCL..Low.Performance.
+product.uwl.low.check=data$Product.UWL..Low.Performance.
+product.cl.low.check=data$Product.CL..Low.Performance.
+product.lwl.low.check=data$Product.LWL..Low.Performance.
+product.lcl.low.check=data$Product.LCL..Low.Performance.
+
+```
+
+```{r}
+#plot the points
+plot1=png("Allnew.png", width=1050, height=972, units="px") #648
+par(mar = c(6,7,6,3))
+plot(time,product,
+     col=ifelse(type=="HIGH",
+                alpha("#00B050", 0.5),
+                ifelse(
+                  type=="NORMAL",
+                  alpha("#FFFF00", 0.3),
+                  ifelse(
+                    type=="LOW",
+                    alpha("#FF4B4B", 0.5),
+                    alpha("#cfe6e1", 0.2)
+                  )
+                )
+              ),
+     xlab="Simulation Time",
+     ylab="Product Amount (mM)",
+     ylim=c(0,8),
+     main="Generating Control Limits From Simulation Data",
+     pch=19,
+     cex=ifelse(product>7.8,0,2), #(-0.035*product^2+3), #1.5,
+     cex.lab=2.7,
+     cex.axis=2,
+     cex.main=3)
+
+# #high
+# lines(roundtime,product.ucl.high, lwd=4, col="#FF0000")
+# lines(roundtime,product.uwl.high, lwd=4, col="#FFC000")
+# lines(roundtime,product.cl.high,  lwd=4, col="#000000")
+# lines(roundtime,product.lwl.high, lwd=4, col="#FFC000")
+# lines(roundtime,product.lcl.high, lwd=4, col="#FF0000")
+# 
+# #normal
+# lines(roundtime,product.ucl.normal, lwd=4, col="#FF0000")
+# lines(roundtime,product.uwl.normal, lwd=4, col="#FFC000")
+# lines(roundtime,product.cl.normal,  lwd=4, col="#000000")
+# lines(roundtime,product.lwl.normal, lwd=4, col="#FFC000")
+# lines(roundtime,product.lcl.normal, lwd=4, col="#FF0000")
+# 
+# #low
+# lines(roundtime,product.ucl.low, lwd=4, col="#FF0000")
+# lines(roundtime,product.uwl.low, lwd=4, col="#FFC000")
+# lines(roundtime,product.cl.low,  lwd=4, col="#000000")
+# lines(roundtime,product.lwl.low, lwd=4, col="#FFC000")
+# lines(roundtime,product.lcl.low, lwd=4, col="#FF0000")
+
+#legend
+legend("topleft",
+      c("High Performance", "Normal Performance", "Low Performance"),
+      fill=c("#00B050", "#FFCC00", "#FF4B4B"),
+      cex=1.8)
+dev.off()
+```
+
+
+```{r}
+plot1=png("high test.png", width=1050, height=648, units="px")
+par(mar = c(6,7,6,3))
+plot(time.highruns, highruns,
+     col=alpha("#00B050", 0.5),
+     xlab="Simulation Time",
+     ylab="Product Amount (mM)",
+     main="High Performance Product Control Limits",
+     pch=19,
+     cex=4,
+     cex.lab=2.7,
+     cex.axis=2,
+     cex.main=3)
+
+lines(roundtime,product.ucl.high, lwd=4, col="#FF0000")
+lines(roundtime,product.uwl.high, lwd=4, col="#FFC000")
+lines(roundtime,product.cl.high,  lwd=4, col="#000000")
+lines(roundtime,product.lwl.high, lwd=4, col="#FFC000")
+lines(roundtime,product.lcl.high, lwd=4, col="#FF0000")
+
+legend("topleft",
+      c("UCL", "UWL", "CL", "LWL", "LCL"),
+      fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000" ),
+      cex=1.8)
+
+```
+
+
+```{r}
+plot1=png("Normal.png", width=1050, height=648, units="px")
+par(mar = c(6,7,6,3))
+plot(time.normalruns, normalruns,
+     col=alpha("#FFFF00", 0.3),
+     xlab="Simulation Time",
+     ylab="Product Amount (mM)",
+     main="Normal Performance Product Control Limits",
+     pch=19,
+     cex=3.5,
+     cex.lab=2.7,
+     cex.axis=2,
+     cex.main=3)
+
+lines(roundtime,product.ucl.normal, lwd=4, col="#FF0000")
+lines(roundtime,product.uwl.normal, lwd=4, col="#FFC000")
+lines(roundtime,product.cl.normal,  lwd=4, col="#000000")
+lines(roundtime,product.lwl.normal, lwd=4, col="#FFC000")
+lines(roundtime,product.lcl.normal, lwd=4, col="#FF0000")
+
+legend("topleft",
+      c("UCL", "UWL", "CL", "LWL", "LCL"),
+      fill=c("#FF0000", "#FFA000", "#000000","#FFA000", "#FF0000" ),
+      cex=1.8)
+dev.off()
+```
+
+```{r}
+plot1=png("Low.png", width=1050, height=648, units="px")
+par(mar = c(6,7,6,3))
+#c(bottom, left, top, right))
+plot(time.lowruns, lowruns,
+     col=ifelse(lowruns<product.lcl.low.check,
+                 alpha("#FF4B4B", 0.0),
+                 alpha("#FF4B4B", 0.5)),
+     xlab="Simulation Time",
+     ylab="Product Amount (mM)",
+     main="Low Performance Product Control Limits",
+     pch=19,
+     cex=4,
+     cex.lab=2.7,
+     cex.axis=2,
+     cex.main=3
+     )
+
+lines(roundtime,product.ucl.low, lwd=4, col="#FF0000")
+lines(roundtime,product.uwl.low, lwd=4, col="#FFC000")
+lines(roundtime,product.cl.low,  lwd=4, col="#000000")
+lines(roundtime,product.lwl.low, lwd=4, col="#FFC000")
+lines(roundtime,product.lcl.low, lwd=4, col="#FF0000")
+
+legend("topleft",
+      c("UCL", "UWL", "CL", "LWL", "LCL"),
+      fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000" ),
+      cex=1.8)
+
+dev.off()
+```
+
+```{r}
+
+plot1=png("Low.png", width=1050, height=648, units="px")
+par(mar = c(6,7,6,3))
+#c(bottom, left, top, right))
+plot(time.lowruns, lowruns,
+     col=ifelse(lowruns<product.lcl.low.check,
+                 alpha("#FF4B4B", 0.0),
+                 alpha("#FF4B4B", 0.5)),
+     xlab="Simulation Time",
+     ylab="Product Amount (mM)",
+     main="Low Performance Product Control Limits",
+     pch=19,
+     cex=4,
+     cex.lab=2.7,
+     cex.axis=2,
+     cex.main=3
+     )
+
+lines(roundtime,product.ucl.low, lwd=4, col="#FF0000")
+lines(roundtime,product.uwl.low, lwd=4, col="#FFC000")
+lines(roundtime,product.cl.low,  lwd=4, col="#000000")
+lines(roundtime,product.lwl.low, lwd=4, col="#FFC000")
+lines(roundtime,product.lcl.low, lwd=4, col="#FF0000")
+
+legend("topleft",
+      c("UCL", "UWL", "CL", "LWL", "LCL"),
+      fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000" ),
+      cex=1.8)
+
+dev.off()
+```
+
+```{r}
+
+data=read.csv("Combined Data For Graphing.csv")
+high=read.csv("High Performance.csv")
+normal=read.csv("Normal Performance.csv")
+low=read.csv("Low Performance.csv")
+
+category_list=list("Viable.Cell.Density",
+                "Glucose",
+                "Glutamine",
+                "Lactate",
+                "Ammonium",
+                "Product",
+                "Impurity.1",
+                "Impurity.2")
+
+category_data=list(data["Viable.Cell.Density"],
+                data["Glucose"],
+                data["Glutamine"],
+                data["Lactate"],
+                data["Ammonium"],
+                data["Product"],
+                data["Impurity.1"],
+                data["Impurity.2"])
+
+time_data=list(data[data$CONTROL.TYPE=="HIGH",]$Timevalue,
+               data[data$CONTROL.TYPE=="NORMAL",]$Timevalue,
+               data[data$CONTROL.TYPE=="LOW",]$Timevalue)
+
+runtypes=list(high,normal,low)
+runlabels=list("High Performance", "Normal Performance", "Low Performance")
+runtype_short=list("HIGH","NORMAL","LOW")
+color_list=c("#00B050", "#FFCC00", "#FF4B4B")
+
+roundtime=c(seq(from=0, to=720, by=3))
+
+runtype_counter=1
+category_counter=1
+
+for (i in 1:24){
+  category_counter = category_counter %% 9
+  if (category_counter==0){
+    runtype_counter=runtype_counter+1
+    category_counter=1
+  }
+
+  ucl=as.data.frame(runtypes[runtype_counter])[,category_counter*5+1]
+  uwl=as.data.frame(runtypes[runtype_counter])[,category_counter*5+0]
+  cl=as.data.frame(runtypes[runtype_counter])[,category_counter*5-1,]
+  lwl=as.data.frame(runtypes[runtype_counter])[,category_counter*5-2]
+  lcl=as.data.frame(runtypes[runtype_counter])[,category_counter*5-3]
+  
+  #timeval=as.data.frame(time_data[runtype_counter])
+  #points=as.data.frame(category_data[category_counter])
+  timeval=data[data$CONTROL.TYPE==runtype_short[runtype_counter],"Timevalue"]
+  points=data[data$CONTROL.TYPE==
+                              as.character(runtype_short[runtype_counter]),
+                            as.character(category_list[category_counter])]
+  
+  name=paste(runlabels[runtype_counter],category_list[category_counter],"Control Chart.png")
+  
+  colordots=color_list[runtype_counter]
+  
+  units=ifelse(category_counter==1,"10^5 Cells/L","mM")
+  
+  logval=ifelse(category_list[category_counter]=="Glutamine","y","")
+  
+  plot1=png(name, width=1050, height=648, units="px")
+  par(mar = c(6,7,6,3))
+  #c(bottom, left, top, right))
+  plot(timeval, points,
+       col=alpha(colordots, 0.0), #changed from 0.5
+       xlab="Simulation Time",
+       ylab=paste(as.character(category_list[category_counter]),units),
+       main=paste(as.character(runlabels[runtype_counter]),as.character(category_list[category_counter]),"Control Chart"),
+       pch=19,
+       cex=4,
+       cex.lab=2.7,
+       cex.axis=2,
+       cex.main=2,
+       log=logval
+       )
+  
+  lines(roundtime,ucl, lwd=4, col="#FF0000")
+  lines(roundtime,uwl, lwd=4, col="#FFC000")
+  lines(roundtime,cl,  lwd=4, col="#000000")
+  lines(roundtime,lwl, lwd=4, col="#FFC000")
+  lines(roundtime,lcl, lwd=4, col="#FF0000")
+  
+  legend("topleft",
+        c("UCL", "UWL", "CL", "LWL", "LCL"),
+        fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000" ),
+        cex=1.8)
+  
+  dev.off()
+  
+  print(paste(runtype_counter,category_counter))
+  
+  category_counter=category_counter+1
+
+}
+
+```
+```{r}
+  plot1=png(name, width=1050, height=648, units="px")
+  par(mar = c(6,7,6,3))
+  #c(bottom, left, top, right))
+  plot(timeval, points,
+       col=alpha(colordots, 0.5),
+       xlab="Simulation Time",
+       ylab=paste(category_list[category_counter],units),
+       main=paste(runlabels[runtype_counter],category_list[category_counter],"Control Chart"),
+       pch=19,
+       cex=4,
+       cex.lab=2.7,
+       cex.axis=2,
+       cex.main=3
+       )
+  
+  lines(roundtime,ucl, lwd=4, col="#FF0000")
+  lines(roundtime,uwl, lwd=4, col="#FFC000")
+  lines(roundtime,cl,  lwd=4, col="#000000")
+  lines(roundtime,lwl, lwd=4, col="#FFC000")
+  lines(roundtime,lcl, lwd=4, col="#FF0000")
+  
+  legend("topleft",
+        c("UCL", "UWL", "CL", "LWL", "LCL"),
+        fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000" ),
+        cex=1.8)
+  
+  dev.off()
+```
+
+```{r}
+samplerun=read.csv("SampleRun.csv")
+high=read.csv("High Performance.csv")
+
+category_list=list("Viable.Cell.Density",
+                "Glucose",
+                "Glutamine",
+                "Lactate",
+                "Ammonium",
+                "Product",
+                "Impurity.1",
+                "Impurity.2")
+
+roundtime=c(seq(from=0, to=720, by=3))
+
+ylimits=c(541.78,
+          61.249,
+          6.969,
+          37.78,
+          6.098,
+          8.879,
+          1.369,
+          0.456)
+
+i=1
+
+timeval=samplerun[1]
+timeval=as.numeric(unlist(timeval))
+for (i in 1:8){
+
+  name=paste("High Performance",category_list[i],"Control Chart.png")
+  
+  ucl=high[,i*5+1]
+  uwl=high[,i*5+0]
+  cl=high[,i*5-1,]
+  lwl=high[,i*5-2]
+  lcl=high[,i*5-3]
+  
+  points=samplerun[1+i]
+  points=as.numeric(unlist(points))
+  
+  logval=ifelse(category_list[i]=="Glutamine","y","")
+  
+  units=ifelse(i==1,"10^5 Cells/L","mM")
+  
+  plot1=png(name, width=1050, height=648, units="px")
+  par(mar = c(6,7,6,3))
+  #c(bottom, left, top, right))
+  
+
+  
+  plot(timeval, points,
+       type="l",
+       col="skyblue",
+       xlab="Simulation Time",
+       ylab=paste(as.character(category_list[i]),units),
+       main=paste("High Performance",as.character(category_list[i]),"Control Chart"),
+       #pch=19,
+       #cex=4,
+       lwd=5,
+       cex.lab=2.7,
+       cex.axis=2,
+       cex.main=2,
+       #log=logval
+       ylim=c(0,ylimits[i])
+       )
+  
+  lines(roundtime,ucl, lwd=4, col="#FF0000")
+  lines(roundtime,uwl, lwd=4, col="#FFC000")
+  lines(roundtime,cl,  lwd=4, col="#000000")
+  lines(roundtime,lwl, lwd=4, col="#FFC000")
+  lines(roundtime,lcl, lwd=4, col="#FF0000")
+  
+  legend("topleft",
+        c("UCL", "UWL", "CL", "LWL", "LCL", "Simulation Run"),
+        fill=c("#FF0000", "#FFC000", "#000000","#FFC000", "#FF0000", "skyblue"),
+        cex=1.8)
+  
+  dev.off()
+  
+ }
+
+```
+
+
+
